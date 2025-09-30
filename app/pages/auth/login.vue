@@ -22,9 +22,7 @@ const handleLogin = async (): Promise<void> => {
 
 <template>
   <v-form @submit.prevent="handleLogin">
-    <h2 class="text-h6 text-center mb-6 text-grey-darken-3">
-      Entrar no Vessel
-    </h2>
+    <h2 class="text-h6 text-center mb-6">Entrar no Vessel</h2>
 
     <v-text-field
       v-model="email"
@@ -67,12 +65,12 @@ const handleLogin = async (): Promise<void> => {
         Não tem uma conta? Registre-se
       </NuxtLink>
 
-      <NuxtLink
+      <!-- <NuxtLink
         to="/auth/forgot-password"
         class="text-decoration-none text-primary"
       >
         Esqueceu a senha?
-      </NuxtLink>
+      </NuxtLink> -->
     </div>
   </v-form>
 </template>

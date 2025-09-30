@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import logoVessel from "~/assets/images/logo-vessel.png";
+
+const theme = useTheme();
 </script>
 
 <template>
@@ -33,6 +35,7 @@ import logoVessel from "~/assets/images/logo-vessel.png";
                 max-width="150"
                 class="mx-auto mb-4"
                 rounded="xl"
+                :class="theme.current.value.dark ? 'logo-vessel-dark' : ''"
               />
             </div>
 
@@ -59,3 +62,9 @@ import logoVessel from "~/assets/images/logo-vessel.png";
     </v-main>
   </v-app>
 </template>
+
+<style scoped>
+.logo-vessel-dark {
+  filter: invert(90%) grayscale(100%);
+}
+</style>

@@ -28,9 +28,7 @@ const handleRegister = async (): Promise<void> => {
 
 <template>
   <v-form @submit.prevent="handleRegister">
-    <h2 class="text-h6 text-center mb-6 text-grey-darken-3">
-      Criar sua Conta Vessel
-    </h2>
+    <h2 class="text-h6 text-center mb-6">Criar sua Conta Vessel</h2>
 
     <v-text-field
       v-model="email"
@@ -66,6 +64,7 @@ const handleRegister = async (): Promise<void> => {
     <v-alert v-if="authStore.error" type="error" class="mb-4" density="compact">
       {{ authStore.error }}
     </v-alert>
+
     <v-alert
       v-if="registrationSuccess"
       type="success"
