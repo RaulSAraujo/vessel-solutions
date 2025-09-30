@@ -1,4 +1,5 @@
 import { pt } from 'vuetify/locale'
+import colors from 'vuetify/lib/util/colors.mjs'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -19,12 +20,12 @@ export default defineNuxtConfig({
 
   modules: [
     'dayjs-nuxt',
+    'nuxt-charts',
     '@pinia/nuxt',
     '@nuxt/eslint',
     '@nuxtjs/supabase',
     '@vee-validate/nuxt',
     'vuetify-nuxt-module',
-    'nuxt-charts'
   ],
 
   supabase: {
@@ -54,6 +55,42 @@ export default defineNuxtConfig({
       },
       theme: {
         defaultTheme: 'light',
+        themes: {
+          dark: {
+            dark: true,
+            colors: {
+              primary: colors.blue.darken2,
+              accent: colors.grey.darken3,
+              secondary: colors.amber.darken3,
+              info: colors.teal.lighten1,
+              warning: colors.amber.base,
+              error: colors.deepOrange.accent4,
+              success: colors.green.accent3,
+              surface: colors.grey.darken4,
+              'surface-bright': '#272727',
+              'surface-light': '#272727',
+              'surface-variant': colors.grey.darken3,
+              'on-surface-variant': colors.grey.lighten3,
+            }
+          },
+          light: {
+            dark: false,
+            colors: {
+              primary: colors.blue.darken2,
+              accent: colors.grey.darken3,
+              secondary: colors.amber.darken3,
+              info: colors.teal.lighten1,
+              warning: colors.amber.base,
+              error: colors.deepOrange.accent4,
+              success: colors.green.accent3,
+              surface: colors.grey.lighten5,
+              'surface-bright': colors.grey.lighten5,
+              'surface-light': colors.grey.lighten3,
+              'surface-variant': colors.grey.darken3,
+              'on-surface-variant': colors.grey.lighten3,
+            },
+          },
+        },
       },
     },
   },

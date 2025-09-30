@@ -2,7 +2,7 @@
 
 <template>
   <v-row
-    class="bg-grey-lighten-4 d-flex align-center justify-center text-center py-16"
+    class="action-section d-flex align-center justify-center text-center py-16"
   >
     <v-col cols="12" md="8">
       <h2 class="text-h3 mb-4">Pronto para Elevar sua Coquetelaria?</h2>
@@ -24,3 +24,13 @@
     </v-col>
   </v-row>
 </template>
+
+<style scoped>
+.action-section {
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--v-theme-background)),
+    rgb(var(--v-theme-primary))
+  );
+}
+</style>
