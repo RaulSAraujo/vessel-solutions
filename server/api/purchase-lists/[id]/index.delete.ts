@@ -1,25 +1,33 @@
 import { getSupabaseClientAndUser } from '~~/server/utils/supabase';
 import type { FetchError } from "ofetch";
-import type { Tables } from '~~/server/types/database';
 
 export default defineEventHandler(async (event) => {
     try {
         const { client } = await getSupabaseClientAndUser(event);
+        const listId = event.context.params?.id;
 
-        const { data, error } = await client
-            .from('drinks')
-            .select('*')
-            .order('name', { ascending: true });
+        if (!listId) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'Bad Request',
+                message: 'Purchase List ID is required.',
+            });
+        }
+
+        const { error } = await client
+            .from('purchase_lists')
+            .delete()
+            .eq('id', listId);
 
         if (error) {
             throw createError({
                 statusCode: 500,
-                statusMessage: 'Failed to fetch drinks',
+                statusMessage: 'Failed to delete purchase list',
                 message: error.message,
             });
         }
 
-        return data as Tables<'drinks'>[];
+        return { message: `Purchase List ${listId} deleted successfully.` };
     } catch (error: unknown) {
         const err = error as FetchError;
 

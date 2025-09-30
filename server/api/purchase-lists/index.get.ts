@@ -7,19 +7,19 @@ export default defineEventHandler(async (event) => {
         const { client } = await getSupabaseClientAndUser(event);
 
         const { data, error } = await client
-            .from('drinks')
+            .from('purchase_lists')
             .select('*')
-            .order('name', { ascending: true });
+            .order('generation_date', { ascending: false });
 
         if (error) {
             throw createError({
                 statusCode: 500,
-                statusMessage: 'Failed to fetch drinks',
+                statusMessage: 'Failed to fetch purchase lists',
                 message: error.message,
             });
         }
 
-        return data as Tables<'drinks'>[];
+        return data as Tables<'purchase_lists'>[];
     } catch (error: unknown) {
         const err = error as FetchError;
 

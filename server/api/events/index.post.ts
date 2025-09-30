@@ -1,7 +1,7 @@
-import { getSupabaseClientAndUser } from "../../utils/supabase";
+import { getSupabaseClientAndUser } from "~~/server/utils/supabase";
 
 import type { FetchError } from "ofetch";
-import type { Tables, TablesInsert } from "../../types/database";
+import type { Tables, TablesInsert } from "~~/server/types/database";
 
 export default defineEventHandler(async (event) => {
     try {
