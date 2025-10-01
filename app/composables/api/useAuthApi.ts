@@ -26,6 +26,31 @@ export function useAuthApi() {
         }
     }
 
+    async function loginWithGoogle() {
+        try {
+            loading.value = true;
+            errorMessage.value = null;
+
+            const supabase = useSupabaseClient();
+
+            const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+
+            if (error) throw error;
+
+            console.log(data)
+
+            return true;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+
+            errorMessage.value = err.message;
+
+            return false;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     async function register(email: string, password: string) {
         try {
             loading.value = true;
@@ -76,6 +101,7 @@ export function useAuthApi() {
         loading,
         errorMessage,
         login,
+        loginWithGoogle,
         register,
         logout
     }

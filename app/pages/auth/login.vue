@@ -7,7 +7,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const { loading, errorMessage, login } = useAuthApi();
+const { loading, errorMessage, login, loginWithGoogle } = useAuthApi();
 
 const { handleSubmit, isSubmitting, meta, errors } = useForm({
   validationSchema: authSchema,
@@ -23,6 +23,14 @@ const onSubmit = handleSubmit(async (values) => {
     await navigateTo("/dashboard");
   }
 });
+
+const singUpGoogle = async () => {
+  const success: boolean = await loginWithGoogle();
+
+  if (success) {
+    await navigateTo("/dashboard");
+  }
+};
 </script>
 
 <template>
@@ -67,7 +75,14 @@ const onSubmit = handleSubmit(async (values) => {
 
     <v-divider class="my-6">ou</v-divider>
 
-    <v-btn class="mb-4" block variant="outlined" color="gray" rounded="lg">
+    <v-btn
+      class="mb-4"
+      block
+      variant="outlined"
+      color="gray"
+      rounded="lg"
+      @click="singUpGoogle"
+    >
       <v-icon left class="mr-2">mdi-google-plus</v-icon>
       LOGAR COM GOOGLE
     </v-btn>
