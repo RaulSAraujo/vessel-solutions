@@ -1,68 +1,69 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import type { Ref } from "vue";
-import { useAuthStore } from "~/stores/auth";
+import { authSchema } from "~/schemas/auth";
+import { useAuthApi } from "~/composables/api/useAuthApi";
 
 definePageMeta({
   layout: "auth",
   middleware: ["auth"],
 });
 
-const authStore = useAuthStore();
-const email: Ref<string> = ref("");
-const password: Ref<string> = ref("");
+const { loading, errorMessage, register } = useAuthApi();
+
+const { handleSubmit, isSubmitting, meta, errors } = useForm({
+  validationSchema: authSchema,
+});
+
+const { value: email } = useField<string>("email");
+const { value: password } = useField<string>("password");
+
 const registrationSuccess: Ref<boolean> = ref(false);
 
-const handleRegister = async (): Promise<void> => {
-  const success: boolean = await authStore.register(
-    email.value,
-    password.value
-  );
+const onSubmit = handleSubmit(async (values) => {
+  const success: boolean = await register(values.email, values.password);
+
   if (success) {
     registrationSuccess.value = true;
-    // Opcional: redirecionar após um tempo ou manter na página com a mensagem
-    // setTimeout(() => navigateTo('/auth/login'), 3000);
   }
-};
+});
 </script>
 
 <template>
-  <v-form @submit.prevent="handleRegister">
-    <h2 class="text-h6 text-center mb-6">Criar sua Conta Vessel</h2>
+  <v-form @submit.prevent="onSubmit">
+    <h2 class="text-h6 text-center mb-6">Crie sua conta Vessel</h2>
 
-    <v-text-field
-      v-model="email"
-      label="E-mail"
-      type="email"
-      required
-      variant="outlined"
-      density="compact"
-      class="mb-4"
-      hide-details="auto"
-    />
-    <v-text-field
-      v-model="password"
-      label="Senha"
-      type="password"
-      required
-      variant="outlined"
-      density="compact"
-      class="mb-4"
-      hide-details="auto"
-    />
+    <v-row dense class="mb-4">
+      <v-col cols="12">
+        <UiTextField
+          v-model="email"
+          label="E-mail"
+          type="email"
+          :error-messages="errors.email"
+        />
+      </v-col>
+
+      <v-col cols="12">
+        <UiTextField
+          v-model="password"
+          label="Senha"
+          type="password"
+          :error-messages="errors.password"
+        />
+      </v-col>
+    </v-row>
 
     <v-btn
+      block
+      class="mb-4"
       type="submit"
       color="primary"
-      block
-      :loading="authStore.loading"
-      class="mb-4"
+      :loading="loading"
+      :disabled="!meta.valid || isSubmitting"
     >
       Registrar
     </v-btn>
 
-    <v-alert v-if="authStore.error" type="error" class="mb-4" density="compact">
-      {{ authStore.error }}
+    <v-alert v-if="errorMessage" type="error" class="mb-4" density="compact">
+      {{ errorMessage }}
     </v-alert>
 
     <v-alert

@@ -2569,6 +2569,14 @@
     local-pkg "^0.5.0"
     vee-validate "4.15.1"
 
+"@vee-validate/yup@^4.15.1":
+  version "4.15.1"
+  resolved "https://registry.yarnpkg.com/@vee-validate/yup/-/yup-4.15.1.tgz#bd7eb2ff226222154abc9e85468f64562225f608"
+  integrity sha512-+u6lI1IZftjHphj+mTCPJRruwBBwv1IKKCI1EFm6ipQroAPibkS5M8UNX+yeVYG5++ix6m1rsv4/SJvJJQTWJg==
+  dependencies:
+    type-fest "^4.8.3"
+    vee-validate "4.15.1"
+
 "@vercel/nft@^0.30.1":
   version "0.30.2"
   resolved "https://registry.yarnpkg.com/@vercel/nft/-/nft-0.30.2.tgz#5584cdc9778abce54827749baa92081e0bd2d723"
