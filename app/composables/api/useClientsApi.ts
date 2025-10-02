@@ -1,17 +1,21 @@
-import type { Tables, TablesInsert, TablesUpdate } from '~/types/database';
+import type { FetchError } from 'ofetch'
+import type { Client } from '~/types/client';
 
 export function useClientsApi() {
     const loading = ref(false);
-    const error = ref<string | null>(null);
+    const errorMessage = ref<string | null>(null);
 
     const fetchClients = async () => {
-        loading.value = true;
-        error.value = null;
         try {
-            const { data } = await useFetch<Tables<'clients'>[]>('/api/clients');
+            loading.value = true;
+            errorMessage.value = null;
+
+            const { data } = await useFetch<Client[]>('/api/clients');
+
             return data.value;
-        } catch (e: any) {
-            error.value = e.message || 'Failed to fetch clients.';
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || 'Failed to fetch clients.';
             return null;
         } finally {
             loading.value = false;
@@ -19,47 +23,55 @@ export function useClientsApi() {
     };
 
     const getClientById = async (id: string) => {
-        loading.value = true;
-        error.value = null;
         try {
-            const { data } = await useFetch<Tables<'clients'>>(`/api/clients/${id}`);
+            loading.value = true;
+            errorMessage.value = null;
+
+            const { data } = await useFetch<Client>(`/api/clients/${id}`);
             return data.value;
-        } catch (e: any) {
-            error.value = e.message || `Failed to fetch client with ID ${id}.`;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to fetch client with ID ${id}.`;
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const createClient = async (clientData: TablesInsert<'clients'>) => {
-        loading.value = true;
-        error.value = null;
+    const createClient = async (clientData: Partial<Client>) => {
         try {
-            const { data } = await useFetch<Tables<'clients'>>('/api/clients', {
+            loading.value = true;
+            errorMessage.value = null;
+
+            const { data } = await useFetch<Client>('/api/clients', {
                 method: 'POST',
                 body: clientData,
             });
+
             return data.value;
-        } catch (e: any) {
-            error.value = e.message || 'Failed to create client.';
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || 'Failed to create client.';
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const updateClient = async (id: string, clientData: TablesUpdate<'clients'>) => {
-        loading.value = true;
-        error.value = null;
+    const updateClient = async (id: string, clientData: Partial<Client>) => {
         try {
-            const { data } = await useFetch<Tables<'clients'>>(`/api/clients/${id}`, {
+            loading.value = true;
+            errorMessage.value = null;
+
+            const { data } = await useFetch<Client>(`/api/clients/${id}`, {
                 method: 'PUT',
                 body: clientData,
             });
+
             return data.value;
-        } catch (e: any) {
-            error.value = e.message || `Failed to update client with ID ${id}.`;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to update client with ID ${id}.`;
             return null;
         } finally {
             loading.value = false;
@@ -67,15 +79,18 @@ export function useClientsApi() {
     };
 
     const deleteClient = async (id: string) => {
-        loading.value = true;
-        error.value = null;
         try {
+            loading.value = true;
+            errorMessage.value = null;
+
             await useFetch(`/api/clients/${id}`, {
                 method: 'DELETE',
             });
+
             return true;
-        } catch (e: any) {
-            error.value = e.message || `Failed to delete client with ID ${id}.`;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to delete client with ID ${id}.`;
             return false;
         } finally {
             loading.value = false;
@@ -84,7 +99,7 @@ export function useClientsApi() {
 
     return {
         loading,
-        error,
+        errorMessage,
         fetchClients,
         getClientById,
         createClient,

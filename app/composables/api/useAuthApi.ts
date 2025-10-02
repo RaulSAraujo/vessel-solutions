@@ -1,4 +1,5 @@
 import type { FetchError } from 'ofetch'
+
 export function useAuthApi() {
     const loading = ref(false);
     const errorMessage = ref<string | null>(null);

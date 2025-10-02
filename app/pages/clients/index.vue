@@ -104,8 +104,8 @@ const deleteClient = async () => {
       </v-col>
     </v-row>
 
-    <v-alert v-if="api.error.value" type="error" class="mb-4">
-      {{ api.error.value }}
+    <v-alert v-if="api.errorMessage.value" type="error" class="mb-4">
+      {{ api.errorMessage.value }}
     </v-alert>
 
     <v-progress-linear v-if="api.loading.value" indeterminate color="primary" />
