@@ -10,9 +10,9 @@ export function useClientsApi() {
             loading.value = true;
             errorMessage.value = null;
 
-            const { data } = await useFetch<Client[]>('/api/clients');
+            const res = await $fetch<Client[]>('/api/clients');
 
-            return data.value;
+            return res;
         } catch (error: unknown) {
             const err = error as FetchError;
             errorMessage.value = err.message || 'Failed to fetch clients.';
@@ -27,8 +27,9 @@ export function useClientsApi() {
             loading.value = true;
             errorMessage.value = null;
 
-            const { data } = await useFetch<Client>(`/api/clients/${id}`);
-            return data.value;
+            const res = await $fetch<Client>(`/api/clients/${id}`);
+
+            return res;
         } catch (error: unknown) {
             const err = error as FetchError;
             errorMessage.value = err.message || `Failed to fetch client with ID ${id}.`;
@@ -43,12 +44,12 @@ export function useClientsApi() {
             loading.value = true;
             errorMessage.value = null;
 
-            const { data } = await useFetch<Client>('/api/clients', {
+            const res = await $fetch<Client>('/api/clients', {
                 method: 'POST',
                 body: clientData,
             });
 
-            return data.value;
+            return res;
         } catch (error: unknown) {
             const err = error as FetchError;
             errorMessage.value = err.message || 'Failed to create client.';
@@ -63,12 +64,12 @@ export function useClientsApi() {
             loading.value = true;
             errorMessage.value = null;
 
-            const { data } = await useFetch<Client>(`/api/clients/${id}`, {
+            const res = await $fetch<Client>(`/api/clients/${id}`, {
                 method: 'PUT',
                 body: clientData,
             });
 
-            return data.value;
+            return res;
         } catch (error: unknown) {
             const err = error as FetchError;
             errorMessage.value = err.message || `Failed to update client with ID ${id}.`;
@@ -83,7 +84,7 @@ export function useClientsApi() {
             loading.value = true;
             errorMessage.value = null;
 
-            await useFetch(`/api/clients/${id}`, {
+            await $fetch(`/api/clients/${id}`, {
                 method: 'DELETE',
             });
 

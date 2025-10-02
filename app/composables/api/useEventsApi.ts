@@ -1,95 +1,85 @@
-// composables/api/useEventsApi.ts
-import { ref } from 'vue';
-import type { Ref } from 'vue';
-import type {
-    Tables,
-    TablesInsert,
-    TablesUpdate,
-} from '~/types/database';
+import type { FetchError } from 'ofetch'
+import type { Event, EventServedDrinks, EventAdditionalCost } from '~/types/event'
 
 export function useEventsApi() {
-    const loading: Ref<boolean> = ref(false);
-    const error: Ref<string | null> = ref(null);
+    const loading = ref(false);
+    const errorMessage = ref<string | null>(null);
 
-    // --- Event CRUD ---
-
-    const fetchEvents = async (): Promise<Tables<'events'>[] | null> => {
-        loading.value = true;
-        error.value = null;
+    const fetchEvents = async () => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'events'>[]>('/api/events');
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || 'Failed to fetch events.';
+            loading.value = true;
+            errorMessage.value = null;
+            return await $fetch<Event[]>('/api/events');
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || 'Failed to fetch events.';
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const getEventById = async (id: string): Promise<Tables<'events'> | null> => {
-        loading.value = true;
-        error.value = null;
+    const getEventById = async (id: string) => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'events'>>(`/api/events/${id}`);
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || `Failed to fetch event with ID ${id}.`;
+            loading.value = true;
+            errorMessage.value = null;
+            return await $fetch<Event>(`/api/events/${id}`);
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to fetch event with ID ${id}.`;
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const createEvent = async (eventData: TablesInsert<'events'>): Promise<Tables<'events'> | null> => {
-        loading.value = true;
-        error.value = null;
+    const createEvent = async (eventData: Partial<Event>) => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'events'>>('/api/events', {
+            loading.value = true;
+            errorMessage.value = null;
+            return await $fetch<Event>('/api/events', {
                 method: 'POST',
                 body: eventData,
-            });
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || 'Failed to create event.';
+            })
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || 'Failed to create event.';
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const updateEvent = async (id: string, eventData: TablesUpdate<'events'>): Promise<Tables<'events'> | null> => {
-        loading.value = true;
-        error.value = null;
+    const updateEvent = async (id: string, eventData: Partial<Event>) => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'events'>>(`/api/events/${id}`, {
+            loading.value = true;
+            errorMessage.value = null;
+            return await $fetch<Event>(`/api/events/${id}`, {
                 method: 'PUT',
                 body: eventData,
             });
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || `Failed to update event with ID ${id}.`;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to update event with ID ${id}.`;
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const deleteEvent = async (id: string): Promise<boolean> => {
-        loading.value = true;
-        error.value = null;
+    const deleteEvent = async (id: string) => {
         try {
-            const { error: fetchError } = await useFetch(`/api/events/${id}`, {
+            loading.value = true;
+            errorMessage.value = null;
+
+            await $fetch(`/api/events/${id}`, {
                 method: 'DELETE',
             });
-            if (fetchError.value) throw fetchError.value;
+
             return true;
-        } catch (e: any) {
-            error.value = e.message || `Failed to delete event with ID ${id}.`;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to delete event with ID ${id}.`;
             return false;
         } finally {
             loading.value = false;
@@ -97,50 +87,42 @@ export function useEventsApi() {
     };
 
     // --- Event Served Drinks ---
-
-    const addServedDrink = async (
-        eventId: string,
-        servedDrinkData: TablesInsert<'event_served_drinks'>
-    ): Promise<Tables<'event_served_drinks'> | null> => {
-        loading.value = true;
-        error.value = null;
+    const addServedDrink = async (eventId: string, servedDrinkData: EventServedDrinks) => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'event_served_drinks'>>(
+            loading.value = true;
+            errorMessage.value = null;
+            return await $fetch<EventServedDrinks>(
                 `/api/events/${eventId}/served-drinks`,
                 {
                     method: 'POST',
                     body: servedDrinkData,
                 }
-            );
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || 'Failed to add served drink.';
+            )
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || 'Failed to add served drink.';
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const updateServedDrink = async (
-        eventId: string,
-        servedDrinkId: string,
-        servedDrinkData: TablesUpdate<'event_served_drinks'>
-    ): Promise<Tables<'event_served_drinks'> | null> => {
-        loading.value = true;
-        error.value = null;
+    const updateServedDrink = async (eventId: string, servedDrinkId: string, servedDrinkData: Partial<EventServedDrinks>) => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'event_served_drinks'>>(
+            loading.value = true;
+            errorMessage.value = null;
+            const res = await $fetch<EventServedDrinks>(
                 `/api/events/${eventId}/served-drinks/${servedDrinkId}`,
                 {
                     method: 'PUT',
                     body: servedDrinkData,
                 }
             );
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || `Failed to update served drink with ID ${servedDrinkId}.`;
+
+            return res
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to update served drink with ID ${servedDrinkId}.`;
             return null;
         } finally {
             loading.value = false;
@@ -148,19 +130,20 @@ export function useEventsApi() {
     };
 
     const deleteServedDrink = async (eventId: string, servedDrinkId: string): Promise<boolean> => {
-        loading.value = true;
-        error.value = null;
         try {
-            const { error: fetchError } = await useFetch(
+            loading.value = true;
+            errorMessage.value = null;
+            await $fetch(
                 `/api/events/${eventId}/served-drinks/${servedDrinkId}`,
                 {
                     method: 'DELETE',
                 }
             );
-            if (fetchError.value) throw fetchError.value;
+
             return true;
-        } catch (e: any) {
-            error.value = e.message || `Failed to delete served drink with ID ${servedDrinkId}.`;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to delete served drink with ID ${servedDrinkId}.`;
             return false;
         } finally {
             loading.value = false;
@@ -169,49 +152,36 @@ export function useEventsApi() {
 
     // --- Event Additional Costs ---
 
-    const addAdditionalCost = async (
-        eventId: string,
-        costData: TablesInsert<'event_additional_costs'>
-    ): Promise<Tables<'event_additional_costs'> | null> => {
-        loading.value = true;
-        error.value = null;
+    const addAdditionalCost = async (eventId: string, costData: EventAdditionalCost) => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'event_additional_costs'>>(
-                `/api/events/${eventId}/additional-costs`,
-                {
-                    method: 'POST',
-                    body: costData,
-                }
-            );
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || 'Failed to add additional cost.';
+            loading.value = true;
+            errorMessage.value = null;
+            const res = await $fetch<EventAdditionalCost>(`/api/events/${eventId}/additional-costs`, {
+                method: 'POST',
+                body: costData,
+            });
+            return res;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || 'Failed to add additional cost.';
             return null;
         } finally {
             loading.value = false;
         }
     };
 
-    const updateAdditionalCost = async (
-        eventId: string,
-        costId: string,
-        costData: TablesUpdate<'event_additional_costs'>
-    ): Promise<Tables<'event_additional_costs'> | null> => {
-        loading.value = true;
-        error.value = null;
+    const updateAdditionalCost = async (eventId: string, costId: string, costData: Partial<EventAdditionalCost>) => {
         try {
-            const { data, error: fetchError } = await useFetch<Tables<'event_additional_costs'>>(
-                `/api/events/${eventId}/additional-costs/${costId}`,
-                {
-                    method: 'PUT',
-                    body: costData,
-                }
-            );
-            if (fetchError.value) throw fetchError.value;
-            return data.value;
-        } catch (e: any) {
-            error.value = e.message || `Failed to update additional cost with ID ${costId}.`;
+            loading.value = true;
+            errorMessage.value = null;
+            const res = await $fetch<EventAdditionalCost>(`/api/events/${eventId}/additional-costs/${costId}`, {
+                method: 'PUT',
+                body: costData,
+            });
+            return res;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to update additional cost with ID ${costId}.`;
             return null;
         } finally {
             loading.value = false;
@@ -219,19 +189,17 @@ export function useEventsApi() {
     };
 
     const deleteAdditionalCost = async (eventId: string, costId: string): Promise<boolean> => {
-        loading.value = true;
-        error.value = null;
         try {
-            const { error: fetchError } = await useFetch(
-                `/api/events/${eventId}/additional-costs/${costId}`,
-                {
-                    method: 'DELETE',
-                }
-            );
-            if (fetchError.value) throw fetchError.value;
+            loading.value = true;
+            errorMessage.value = null;
+            await $fetch(`/api/events/${eventId}/additional-costs/${costId}`, {
+                method: 'DELETE',
+            });
+
             return true;
-        } catch (e: any) {
-            error.value = e.message || `Failed to delete additional cost with ID ${costId}.`;
+        } catch (error: unknown) {
+            const err = error as FetchError;
+            errorMessage.value = err.message || `Failed to delete additional cost with ID ${costId}.`;
             return false;
         } finally {
             loading.value = false;
@@ -240,7 +208,7 @@ export function useEventsApi() {
 
     return {
         loading,
-        error,
+        errorMessage,
         fetchEvents,
         getEventById,
         createEvent,
