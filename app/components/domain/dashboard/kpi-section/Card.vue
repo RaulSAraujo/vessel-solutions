@@ -9,7 +9,12 @@ defineProps<{
 </script>
 
 <template>
-  <v-card class="pa-4 text-center border-sm" elevation="2" rounded="xl">
+  <v-card
+    class="pa-4 text-center border-sm"
+    elevation="2"
+    rounded="xl"
+    min-height="170"
+  >
     <v-icon size="48" :color="color || 'primary'">{{ icon }}</v-icon>
 
     <v-card-title v-if="!loading" class="text-h5">
