@@ -4,10 +4,18 @@ import Menu from "./Menu.vue";
 
 <template>
   <v-app-bar app>
-    <v-btn-group variant="plain" divided>
+    <v-btn-group variant="plain">
       <v-btn icon="mdi-home" to="/" />
 
       <v-btn text="Clientes" to="/clients" />
+
+      <v-btn text="Ingredientes" to="/clients" />
+
+      <v-btn text="Drinks" to="/clients" />
+
+      <v-btn text="Eventos" to="/clients" />
+
+      <v-btn text="Listas de Compras" to="/clients" />
     </v-btn-group>
 
     <v-spacer />
