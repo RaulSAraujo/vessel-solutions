@@ -24,7 +24,7 @@ const onSubmit = handleSubmit(async (values) => {
   }
 });
 
-const singUpGoogle = async () => {
+const singInWithGoogle = async () => {
   const success: boolean = await loginWithGoogle();
 
   if (success) {
@@ -76,15 +76,14 @@ const singUpGoogle = async () => {
     <v-divider class="my-6">ou</v-divider>
 
     <v-btn
-      class="mb-4"
       block
-      variant="outlined"
-      color="gray"
+      class="mb-4"
       rounded="lg"
-      @click="singUpGoogle"
+      variant="plain"
+      @click="singInWithGoogle"
     >
-      <v-icon left class="mr-2">mdi-google-plus</v-icon>
-      LOGAR COM GOOGLE
+      <v-icon left class="mr-2 text-red">mdi-google-plus</v-icon>
+      Continue com Google
     </v-btn>
 
     <div class="d-flex flex-column text-center text-caption">
