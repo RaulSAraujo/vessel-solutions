@@ -1,16 +1,19 @@
 import type { FetchError } from 'ofetch'
-import type { Client } from '~/types/client';
+import type { Clients, Datum } from '~/types/client';
+import type { VDataTableServerOptions } from '~/types/data-table';
 
 export function useClientsApi() {
     const loading = ref(false);
     const errorMessage = ref<string | null>(null);
 
-    const fetchClients = async () => {
+    const getClients = async (props?: VDataTableServerOptions) => {
         try {
             loading.value = true;
             errorMessage.value = null;
 
-            const res = await $fetch<Client[]>('/api/clients');
+            const res = await $fetch<Clients>('/api/clients', {
+                query: props
+            });
 
             return res;
         } catch (error: unknown) {
@@ -27,7 +30,7 @@ export function useClientsApi() {
             loading.value = true;
             errorMessage.value = null;
 
-            const res = await $fetch<Client>(`/api/clients/${id}`);
+            const res = await $fetch<Datum>(`/api/clients/${id}`);
 
             return res;
         } catch (error: unknown) {
@@ -39,12 +42,12 @@ export function useClientsApi() {
         }
     };
 
-    const createClient = async (clientData: Partial<Client>) => {
+    const createClient = async (clientData: Partial<Datum>) => {
         try {
             loading.value = true;
             errorMessage.value = null;
 
-            const res = await $fetch<Client>('/api/clients', {
+            const res = await $fetch<Datum>('/api/clients', {
                 method: 'POST',
                 body: clientData,
             });
@@ -59,7 +62,7 @@ export function useClientsApi() {
         }
     };
 
-    const updateClient = async (id: string, clientData: Partial<Client>) => {
+    const updateClient = async (id: string, clientData: Partial<Datum>) => {
         try {
             loading.value = true;
             errorMessage.value = null;
@@ -101,7 +104,7 @@ export function useClientsApi() {
     return {
         loading,
         errorMessage,
-        fetchClients,
+        getClients,
         getClientById,
         createClient,
         updateClient,

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Menu from "./Menu.vue";
+import Avatar from "./Avatar.vue";
 </script>
 
 <template>
@@ -7,19 +8,11 @@ import Menu from "./Menu.vue";
     <v-btn-group variant="plain">
       <v-btn icon="mdi-home" to="/" />
 
-      <v-btn text="Clientes" to="/clients" />
-
-      <v-btn text="Ingredientes" to="/clients" />
-
-      <v-btn text="Drinks" to="/clients" />
-
-      <v-btn text="Eventos" to="/clients" />
-
-      <v-btn text="Listas de Compras" to="/clients" />
+      <Menu />
     </v-btn-group>
 
     <v-spacer />
 
-    <Menu />
+    <Avatar />
   </v-app-bar>
 </template>

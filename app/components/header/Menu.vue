@@ -1,44 +1,39 @@
 <script lang="ts" setup>
-import { useAuthApi } from "~/composables/api/useAuthApi";
-import LogoVessel from "~/assets/images/logo-vessel.png";
-
-const theme = useTheme();
-const useAuth = useAuthApi();
-
-const logout = async () => {
-  await useAuth.logout();
-  await navigateTo("/");
-};
+const menus = [
+  {
+    title: "Cadastro",
+    items: [
+      {
+        title: "Clientes",
+        to: "/clients",
+      },
+      {
+        title: "Ingredientes",
+        to: "/#1",
+      },
+      {
+        title: "Drinks",
+        to: "/#2",
+      },
+      {
+        title: "Eventos",
+        to: "/#3",
+      },
+    ],
+  },
+];
 </script>
 
 <template>
-  <v-menu location="bottom end" offset="15">
+  <v-menu v-for="(menu, index) in menus" :key="index" offset="10">
     <template #activator="{ props }">
-      <v-btn icon v-bind="props" class="mr-5">
-        <v-avatar size="large" :image="LogoVessel" />
-      </v-btn>
+      <v-btn v-bind="props"> {{ menu.title }} </v-btn>
     </template>
 
-    <v-card width="200" rounded="lg">
-      <v-list density="compact" lines="one">
-        <v-list-item
-          title="Alterar tema"
-          prepend-icon="mdi-theme-light-dark"
-          @click="theme.cycle()"
-        />
-
-        <v-divider />
-
-        <v-list-item
-          title="Profile"
-          prepend-icon="mdi-account"
-          @click="console.log('profile')"
-        />
-
-        <v-divider />
-
-        <v-list-item title="Logout" prepend-icon="mdi-logout" @click="logout" />
-      </v-list>
-    </v-card>
+    <v-list>
+      <v-list-item v-for="(item, i) in menu.items" :key="i" :to="item.to">
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
+      </v-list-item>
+    </v-list>
   </v-menu>
 </template>
