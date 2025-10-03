@@ -5,7 +5,7 @@ const menus = [
     items: [
       {
         title: "Clientes",
-        to: "/clients",
+        to: "/client",
       },
       {
         title: "Ingredientes",
