@@ -167,72 +167,74 @@ const handleUpdateOptions = (options: VDataTableServerOptions) => {
 </script>
 
 <template>
-  <v-data-table-server
-    v-model:selected="internalSelected"
-    v-model:expanded="internalExpanded"
-    v-model:sort-by="internalSortBy"
-    :headers="headers"
-    :items="items"
-    :item-value="itemValue"
-    :select-strategy="selectStrategy"
-    :page="internalPage"
-    :items-per-page="internalItemsPerPage"
-    :items-length="totalItems"
-    :loading="loading"
-    :show-expand="showExpand"
-    :show-select="showSelect"
-    :multi-sort="multiSort"
-    :row-props="rowProps"
-    density="compact"
-    mobile-breakpoint="sm"
-    @update:options="handleUpdateOptions"
-  >
-    <template
-      v-for="slotName in parentSlots"
-      :key="slotName"
-      #[getSlotName(slotName)]="slotProps"
+  <ClientOnly>
+    <v-data-table-server
+      v-model:selected="internalSelected"
+      v-model:expanded="internalExpanded"
+      v-model:sort-by="internalSortBy"
+      :headers="headers"
+      :items="items"
+      :item-value="itemValue"
+      :select-strategy="selectStrategy"
+      :page="internalPage"
+      :items-per-page="internalItemsPerPage"
+      :items-length="totalItems"
+      :loading="loading"
+      :show-expand="showExpand"
+      :show-select="showSelect"
+      :multi-sort="multiSort"
+      :row-props="rowProps"
+      density="compact"
+      mobile-breakpoint="sm"
+      @update:options="handleUpdateOptions"
     >
-      <slot :name="slotName" v-bind="slotProps" />
-    </template>
+      <template
+        v-for="slotName in parentSlots"
+        :key="slotName"
+        #[getSlotName(slotName)]="slotProps"
+      >
+        <slot :name="slotName" v-bind="slotProps" />
+      </template>
 
-    <template
-      #header.data-table-select="{ selectAll, allSelected, someSelected }"
-    >
-      <v-checkbox
-        color="primary"
-        :value="!allSelected"
-        :indeterminate="someSelected && !allSelected"
-        hide-details
-        @click="selectAll(!allSelected)"
-      />
-    </template>
+      <template
+        #header.data-table-select="{ selectAll, allSelected, someSelected }"
+      >
+        <v-checkbox
+          color="primary"
+          :value="!allSelected"
+          :indeterminate="someSelected && !allSelected"
+          hide-details
+          @click="selectAll(!allSelected)"
+        />
+      </template>
 
-    <template
-      #item.data-table-select="{ internalItem, isSelected, toggleSelect }"
-    >
-      <v-checkbox-btn
-        color="primary"
-        :model-value="isSelected(internalItem)"
-        @update:model-value="toggleSelect(internalItem)"
-      />
-    </template>
+      <template
+        #item.data-table-select="{ internalItem, isSelected, toggleSelect }"
+      >
+        <v-checkbox-btn
+          color="primary"
+          :model-value="isSelected(internalItem)"
+          @update:model-value="toggleSelect(internalItem)"
+        />
+      </template>
 
-    <template #header.data-table-expand>
-      <v-btn
-        :id="expandedAll ? 'closeAll' : 'expandAll'"
-        :icon="expandedAll ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-        variant="plain"
-        @click="toggleExpandAll"
-      />
-    </template>
+      <template #header.data-table-expand>
+        <v-btn
+          :id="expandedAll ? 'closeAll' : 'expandAll'"
+          :icon="expandedAll ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+          variant="plain"
+          @click="toggleExpandAll"
+        />
+      </template>
 
-    <template #loader="{ isActive }">
-      <v-progress-linear
-        v-if="isActive"
-        color="primary"
-        indeterminate
-        height="2"
-      />
-    </template>
-  </v-data-table-server>
+      <template #loader="{ isActive }">
+        <v-progress-linear
+          v-if="isActive"
+          color="primary"
+          indeterminate
+          height="2"
+        />
+      </template>
+    </v-data-table-server>
+  </ClientOnly>
 </template>

@@ -3,7 +3,7 @@ import type { FilterOption } from "~/types/filter";
 
 const props = defineProps({
   /**
-   * O valor selecionado do select (para v-model).
+   * O valor selecionado do combobox (para v-model).
    * Pode ser um único item, um array de itens, ou null/undefined.
    */
   modelValue: {
@@ -11,14 +11,14 @@ const props = defineProps({
     default: null,
   },
   /**
-   * O rótulo (label) do select.
+   * O rótulo (label) do combobox.
    */
   label: {
     type: String,
-    default: "",
+    required: true,
   },
   /**
-   * Array de itens para o select.
+   * Array de itens para o combobox.
    */
   items: {
     type: Array as PropType<FilterOption[]>,
@@ -39,16 +39,23 @@ const props = defineProps({
     default: "value",
   },
   /**
-   * Se o select deve ter um botão de limpar.
+   * Se o combobox deve ter um botão de limpar.
    */
   clearable: {
     type: Boolean,
     default: false,
   },
   /**
-   * Se o select permite múltiplas seleções.
+   * Se o combobox permite múltiplas seleções.
    */
   multiple: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Se o menu deve estar aberto por padrão.
+   */
+  menuOpenDefault: {
     type: Boolean,
     default: false,
   },
@@ -60,18 +67,25 @@ const props = defineProps({
     default: false,
   },
   /**
-   * Altura máxima do menu dropdown. Pode ser string (ex: '200px') ou number (ex: 200).
-   */
-  maxHeightMenu: {
-    type: [String, Number, null] as PropType<string | number | null>,
-    default: null,
-  },
-  /**
-   * O texto de placeholder do select.
+   * O texto de placeholder do combobox.
    */
   placeholder: {
     type: String,
     default: undefined,
+  },
+  /**
+   * Comportamento de auto-seleção do primeiro item.
+   */
+  autoSelectFirst: {
+    type: [Boolean, String] as PropType<boolean | "exact">,
+    default: false,
+  },
+  /**
+   * Esconde os detalhes (mensagens de erro, hints).
+   */
+  hideDetails: {
+    type: [Boolean, String] as PropType<boolean | "auto">,
+    default: true,
   },
   /**
    * Densidade do campo ('default', 'comfortable', 'compact').
@@ -97,11 +111,11 @@ const props = defineProps({
     default: "outlined",
   },
   /**
-   * Esconde os detalhes (mensagens de erro, hints).
+   * Altura máxima do menu dropdown.
    */
-  hideDetails: {
-    type: [Boolean, String] as PropType<boolean | "auto">,
-    default: "auto",
+  maxHeightMenu: {
+    type: [String, Number, null] as PropType<string | number | null>,
+    default: "200",
   },
   /**
    * Define a borda arredondada.
@@ -125,21 +139,52 @@ const internalValue = computed({
 </script>
 
 <template>
-  <v-select
+  <v-combobox
     v-model="internalValue"
     :label="label"
-    :color="color"
     :items="items"
     v-bind="$attrs"
+    :color="color"
     :density="density"
-    :rounded="rounded"
     :variant="variant"
+    :rounded="rounded"
+    autocomplete="off"
     :multiple="multiple"
-    :clearable="clearable"
     :item-title="itemTitle"
     :item-value="itemValue"
+    :menu="menuOpenDefault"
+    :clearable="clearable"
     :placeholder="placeholder"
     :hide-details="hideDetails"
     :return-object="returnObject"
-  />
+    :auto-select-first="autoSelectFirst"
+    :menu-props="{
+      // @ts-ignore
+      'max-height': maxHeightMenu,
+    }"
+  >
+    <!-- Slot para customizar a exibição dos itens selecionados quando multiple for true -->
+    <template v-if="multiple" #selection="{ item, index }">
+      <span
+        v-if="index < 1"
+        style="
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+        "
+        >{{ item.title }}</span
+      >
+
+      <span v-if="index === 1" class="text-grey text-caption align-self-center">
+        (+{{ (Array.isArray(internalValue) ? internalValue.length : 0) - 1 }})
+      </span>
+    </template>
+  </v-combobox>
 </template>
+
+<style>
+/* Estilo para garantir que a seleção múltipla não ocupe muito espaço */
+.v-combobox__selection {
+  max-width: 70%;
+}
+</style>

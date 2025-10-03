@@ -3780,7 +3780,7 @@ dayjs-nuxt@2.1.11:
     "@nuxt/kit" "^3.7.4"
     dayjs "^1.11.10"
 
-dayjs@^1.11.10:
+dayjs@^1.11.10, dayjs@^1.11.18:
   version "1.11.18"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.18.tgz#835fa712aac52ab9dec8b1494098774ed7070a11"
   integrity sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==
@@ -5314,6 +5314,11 @@ maplibre-gl@^2.1.9:
     supercluster "^7.1.5"
     tinyqueue "^2.0.3"
     vt-pbf "^3.1.3"
+
+maska@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/maska/-/maska-3.2.0.tgz#0287c8e9cb137d3e08bc65a28547ebc225fbab11"
+  integrity sha512-zSmSgs5/q9vMSmrdZT3rKOv9uLznNWR/niuuAdBZDTvB3SMKOX9vhMtDijFyExz+B4UClu2rvksylUh/ea1bLA==
 
 mdn-data@2.0.28:
   version "2.0.28"
@@ -7522,6 +7527,11 @@ vue-tsc@^3.1.0:
   dependencies:
     "@volar/typescript" "2.4.23"
     "@vue/language-core" "3.1.0"
+
+vue3-toastify@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/vue3-toastify/-/vue3-toastify-0.2.8.tgz#0bb447b39f390ca9a1cb43c3c15ef3eede552b23"
+  integrity sha512-8jDOqsJaBZEbGpCbhWDETJc11D1lZefvgFPq/IPdM+U7+qyXoVPDvK6uq/FIgyV7qV0NcNzvGBMEzjsLQqGROw==
 
 vue@^3.5.21:
   version "3.5.22"

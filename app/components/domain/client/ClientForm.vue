@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import type { Tables, TablesInsert, TablesUpdate } from "~/types/database";
+import type { FormClient, Datum } from "~/types/client";
 import { useValidation } from "~/composables/useValidation"; // Vamos criar este composable
 
 const props = defineProps<{
-  client?: Tables<"clients"> | null;
+  client?: Datum | null;
   loading: boolean;
 }>();
 
@@ -12,7 +11,7 @@ const emit = defineEmits(["submit", "cancel"]);
 
 const { rules } = useValidation();
 
-const formData = ref<TablesInsert<"clients"> | TablesUpdate<"clients">>({
+const formData = ref<FormClient>({
   name: "",
   email: null,
   phone: null,
@@ -25,7 +24,7 @@ watch(
   () => props.client,
   (newVal) => {
     if (newVal) {
-      formData.value = { ...newVal };
+      // formData.value = { ...newVal };
     } else {
       // Reset form for new client
       formData.value = {

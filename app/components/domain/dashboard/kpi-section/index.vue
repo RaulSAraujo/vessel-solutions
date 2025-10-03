@@ -12,9 +12,9 @@ const totalProfit = ref(0);
 const totalClients = ref(0);
 
 async function fetchKPIs() {
-  const allClients = await clientsApi.fetchClients();
+  const allClients = await clientsApi.getClients();
   if (allClients) {
-    totalClients.value = allClients.length;
+    totalClients.value = allClients.data.length;
   }
 
   const allEvents = await eventsApi.fetchEvents();

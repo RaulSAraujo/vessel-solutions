@@ -1,52 +1,38 @@
 import type { FetchError } from 'ofetch'
+import type { EmittedFilters } from "~/types/filter";
 import type { Clients, Datum } from '~/types/client';
 import type { VDataTableServerOptions } from '~/types/data-table';
 
 export function useClientsApi() {
-    const loading = ref(false);
-    const errorMessage = ref<string | null>(null);
-
-    const getClients = async (props?: VDataTableServerOptions) => {
+    const getClients = async (props?: VDataTableServerOptions, filters?: EmittedFilters) => {
         try {
-            loading.value = true;
-            errorMessage.value = null;
-
             const res = await $fetch<Clients>('/api/clients', {
-                query: props
+                query: {
+                    ...props,
+                    filters
+                }
             });
 
             return res;
         } catch (error: unknown) {
             const err = error as FetchError;
-            errorMessage.value = err.message || 'Failed to fetch clients.';
-            return null;
-        } finally {
-            loading.value = false;
+            $toast().error(err.message || 'Failed to fetch clients.');
         }
     };
 
     const getClientById = async (id: string) => {
         try {
-            loading.value = true;
-            errorMessage.value = null;
-
             const res = await $fetch<Datum>(`/api/clients/${id}`);
 
             return res;
         } catch (error: unknown) {
             const err = error as FetchError;
-            errorMessage.value = err.message || `Failed to fetch client with ID ${id}.`;
-            return null;
-        } finally {
-            loading.value = false;
+            $toast().error(err.message || `Failed to fetch client with ID ${id}.`);
         }
     };
 
     const createClient = async (clientData: Partial<Datum>) => {
         try {
-            loading.value = true;
-            errorMessage.value = null;
-
             const res = await $fetch<Datum>('/api/clients', {
                 method: 'POST',
                 body: clientData,
@@ -55,17 +41,12 @@ export function useClientsApi() {
             return res;
         } catch (error: unknown) {
             const err = error as FetchError;
-            errorMessage.value = err.message || 'Failed to create client.';
-            return null;
-        } finally {
-            loading.value = false;
+            $toast().error(err.message || 'Failed to create client.');
         }
     };
 
     const updateClient = async (id: string, clientData: Partial<Datum>) => {
         try {
-            loading.value = true;
-            errorMessage.value = null;
 
             const res = await $fetch<Client>(`/api/clients/${id}`, {
                 method: 'PUT',
@@ -75,17 +56,12 @@ export function useClientsApi() {
             return res;
         } catch (error: unknown) {
             const err = error as FetchError;
-            errorMessage.value = err.message || `Failed to update client with ID ${id}.`;
-            return null;
-        } finally {
-            loading.value = false;
+            $toast().error(err.message || `Failed to update client with ID ${id}.`);
         }
     };
 
     const deleteClient = async (id: string) => {
         try {
-            loading.value = true;
-            errorMessage.value = null;
 
             await $fetch(`/api/clients/${id}`, {
                 method: 'DELETE',
@@ -94,16 +70,11 @@ export function useClientsApi() {
             return true;
         } catch (error: unknown) {
             const err = error as FetchError;
-            errorMessage.value = err.message || `Failed to delete client with ID ${id}.`;
-            return false;
-        } finally {
-            loading.value = false;
+            $toast().error(err.message || `Failed to delete client with ID ${id}.`);
         }
     };
 
     return {
-        loading,
-        errorMessage,
         getClients,
         getClientById,
         createClient,

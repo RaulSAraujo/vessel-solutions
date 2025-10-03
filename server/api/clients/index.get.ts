@@ -1,4 +1,5 @@
 import { getSupabaseClientAndUser } from "~~/server/utils/supabase";
+import { applySupabaseFilters } from "~~/server/utils/applyFilters";
 import type { FetchError } from "ofetch";
 import type { Tables } from "~~/server/types/database";
 
@@ -10,12 +11,28 @@ export default defineEventHandler(async (event) => {
 
     const page = parseInt(query.page as string) || 1; // Página atual, padrão 1
     const limit = parseInt(query.limit as string) || 10; // Itens por página, padrão 10
-
     const offset = (page - 1) * limit; // Calcula o offset
 
-    const { data, error, count } = await client
+    let supabaseQuery = client
       .from("clients")
-      .select("*", { count: "exact" })
+      .select("*", { count: "exact" });
+
+    if (query.filters && typeof query.filters === "string") {
+      try {
+        const filters = JSON.parse(query.filters);
+
+        supabaseQuery = applySupabaseFilters(supabaseQuery, filters);
+      } catch (jsonError) {
+        console.error("Failed to parse filters JSON:", jsonError);
+        throw createError({
+          statusCode: 400,
+          statusMessage: "Bad Request",
+          message: "Invalid 'filters' parameter format. Must be a valid JSON string.",
+        });
+      }
+    }
+
+    const { data, error, count } = await supabaseQuery
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 

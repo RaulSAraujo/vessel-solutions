@@ -44,6 +44,20 @@ export default defineNuxtConfig({
     { path: '~/components/domain', prefix: '' },
   ],
 
+  plugins: [
+    { src: '~/plugins/maska.ts', mode: 'client' },
+    { src: '~/plugins/toast.ts', mode: 'client' }
+  ],
+
+  pinia: {
+    storesDirs: ['./app/stores/**'],
+  },
+
+  dayjs: {
+    locales: ['pt-br'],
+    defaultLocale: 'pt-br',
+  },
+
   vuetify: {
     vuetifyOptions: {
       icons: {
@@ -94,4 +108,6 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  sourcemap: true
 })
