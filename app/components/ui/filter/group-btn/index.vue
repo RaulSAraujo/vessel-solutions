@@ -6,7 +6,7 @@ defineEmits(["clear", "search"]);
 </script>
 
 <template>
-  <div class="d-flex align-center justify-end">
+  <div class="d-flex align-center justify-center">
     <BtnClear @clear="$emit('clear')" />
 
     <BtnSearch @search="$emit('search')" />

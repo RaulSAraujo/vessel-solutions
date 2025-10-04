@@ -84,7 +84,7 @@ const props = defineProps({
     default: 1,
   },
   itemsPerPage: {
-    type: Number as PropType<10 | 25 | 50 | 100 | -1>,
+    type: Number as PropType<10 | 25 | 50>,
     default: 10,
   },
   totalItems: {
@@ -102,6 +102,10 @@ const props = defineProps({
   rowProps: {
     type: Function,
     default: () => {},
+  },
+  title: {
+    type: String,
+    default: "Nome da tabela",
   },
 });
 
@@ -168,6 +172,20 @@ const handleUpdateOptions = (options: VDataTableServerOptions) => {
 
 <template>
   <ClientOnly>
+    <v-toolbar
+      :title="title"
+      color="surface"
+      elevation="3"
+      density="compact"
+      class="rounded-t-xl border-sm"
+    >
+      <v-chip color="primary" density="compact" class="text-caption mr-2">
+        Total: {{ totalItems }}
+      </v-chip>
+
+      <slot name="buttons" />
+    </v-toolbar>
+
     <v-data-table-server
       v-model:selected="internalSelected"
       v-model:expanded="internalExpanded"
@@ -186,6 +204,7 @@ const handleUpdateOptions = (options: VDataTableServerOptions) => {
       :row-props="rowProps"
       density="compact"
       mobile-breakpoint="sm"
+      class="rounded-b-xl border-sm pt-2 elevation-2"
       @update:options="handleUpdateOptions"
     >
       <template
@@ -234,6 +253,33 @@ const handleUpdateOptions = (options: VDataTableServerOptions) => {
           indeterminate
           height="2"
         />
+      </template>
+
+      <template #bottom="{ pageCount }">
+        <div
+          class="d-flex align-center justify-end mr-4"
+          style="gap: 8px; width: 100%"
+        >
+          <div
+            class="d-flex align-center"
+            style="width: fit-content; min-width: 150px"
+          >
+            <span class="text-caption me-2">Itens por página:</span>
+            <v-select
+              v-model="internalItemsPerPage"
+              hide-details
+              density="compact"
+              variant="outlined"
+              :items="[10, 25, 50]"
+            />
+          </div>
+
+          <v-pagination
+            v-model="internalPage"
+            :length="pageCount"
+            total-visible="7"
+          />
+        </div>
       </template>
     </v-data-table-server>
   </ClientOnly>

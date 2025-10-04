@@ -33,19 +33,16 @@ const resetFilters = () => {
 </script>
 
 <template>
-  <div class="mb-6">
+  <div
+    class="d-flex flex-column justify-between pt-4"
+    style="width: 100%; height: 100%"
+  >
     <Fields
       v-model="internalValue"
       :filters="eventFilters"
-      class="mb-3"
       @search="emit('search', internalValue)"
-    >
-      <template #actions>
-        <GroupBtn
-          @search="emit('search', internalValue)"
-          @clear="resetFilters"
-        />
-      </template>
-    </Fields>
+    />
+
+    <GroupBtn @clear="resetFilters" @search="emit('search', internalValue)" />
   </div>
 </template>

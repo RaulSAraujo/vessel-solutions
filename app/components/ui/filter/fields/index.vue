@@ -148,14 +148,7 @@ watch(
 
 <template>
   <v-row>
-    <v-col
-      v-for="filter in filters"
-      :key="filter.key"
-      cols="12"
-      sm="6"
-      md="4"
-      lg="3"
-    >
+    <v-col v-for="filter in filters" :key="filter.key" cols="12">
       <template v-if="filter.type === 'string'">
         <UiTextField
           :model-value="internalFilters[filter.key]"
@@ -223,7 +216,7 @@ watch(
 
     <v-spacer />
 
-    <v-col cols="12" sm="6" md="4" lg="3">
+    <v-col cols="12">
       <slot name="actions" />
     </v-col>
   </v-row>

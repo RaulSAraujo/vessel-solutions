@@ -3,14 +3,19 @@ definePageMeta({
   middleware: ["auth"],
   layout: "default",
 });
+
+const drawer = ref(false);
 </script>
 
 <template>
   <v-container fluid>
-    <h1 class="text-h4 mb-4">Clientes</h1>
+    <div class="d-flex flex-row align-center mb-4">
+      <v-icon size="24" class="mr-2" icon="mdi-account-group" />
+      <h1 class="text-h5">Gerenciamento de Clientes</h1>
+    </div>
 
-    <ClientFilter />
+    <ClientFilter v-model="drawer" />
 
-    <ClientTable />
+    <ClientTable @open-filter="drawer = true" />
   </v-container>
 </template>

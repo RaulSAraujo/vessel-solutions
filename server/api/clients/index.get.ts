@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event); // Obtém os parâmetros da query string
 
     const page = parseInt(query.page as string) || 1; // Página atual, padrão 1
-    const limit = parseInt(query.limit as string) || 10; // Itens por página, padrão 10
-    const offset = (page - 1) * limit; // Calcula o offset
+    const itemsPerPage = parseInt(query.itemsPerPage as string) || 10; // Itens por página, padrão 10
+    const offset = (page - 1) * itemsPerPage; // Calcula o offset
 
     let supabaseQuery = client
       .from("clients")
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
 
     const { data, error, count } = await supabaseQuery
       .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+      .range(offset, offset + itemsPerPage - 1);
 
     if (error) {
       throw createError({
@@ -48,9 +48,9 @@ export default defineEventHandler(async (event) => {
       data: data as Tables<"clients">[],
       page: {
         page,
-        limit,
+        itemsPerPage,
         totalRows: count,
-        totalPages: Math.ceil((count || 0) / limit),
+        totalPages: Math.ceil((count || 0) / itemsPerPage),
       }
     };
   } catch (error: unknown) {

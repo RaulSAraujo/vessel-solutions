@@ -10,8 +10,11 @@ const clientsApi = useClientsApi();
 const totalEvents = ref(0);
 const totalProfit = ref(0);
 const totalClients = ref(0);
+const loading = ref(false);
 
 async function fetchKPIs() {
+  loading.value = true;
+
   const allClients = await clientsApi.getClients();
   if (allClients) {
     totalClients.value = allClients.data.length;
@@ -24,6 +27,8 @@ async function fetchKPIs() {
       return sum + (event.gross_profit || 0);
     }, 0);
   }
+
+  loading.value = false;
 }
 
 onMounted(fetchKPIs);
@@ -34,30 +39,30 @@ onMounted(fetchKPIs);
     <v-col cols="12" md="4">
       <Card
         color="primary"
+        :loading="loading"
         :title="totalEvents"
         icon="mdi-calendar-check"
         description="Eventos Realizados"
-        :loading="clientsApi.loading.value"
       />
     </v-col>
 
     <v-col cols="12" md="4">
       <Card
         color="success"
+        :loading="loading"
         icon="mdi-currency-usd"
         description="Lucro Bruto Total"
         :title="`R$ ${totalProfit.toFixed(2)}`"
-        :loading="eventsApi.loading.value"
       />
     </v-col>
 
     <v-col cols="12" md="4">
       <Card
         color="info"
+        :loading="loading"
         :title="totalClients"
         icon="mdi-account-group"
         description="Clientes Ativos"
-        :loading="eventsApi.loading.value"
       />
     </v-col>
   </v-row>

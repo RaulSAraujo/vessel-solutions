@@ -5,15 +5,32 @@ import type { Datum } from "~/types/client";
 import type { EmittedFilters } from "~/types/filter";
 import type { VDataTableServerOptions } from "~/types/data-table";
 
-export const useClientTableStore = defineStore('clientTable', () => {
+export const useClientStore = defineStore('client', () => {
+    // Tabela
+    const page = ref(1);
     const totalItems = ref(0)
     const loading = ref(false)
     const items = ref<Datum[]>([])
+    const itemsPerPage = ref<10 | 25 | 50>(10)
 
-    async function fetchClients(props?: VDataTableServerOptions, filters?: EmittedFilters) {
+    // Filtros
+    const activeFilters = ref<EmittedFilters>({});
+
+    async function fetchClients(props?: VDataTableServerOptions) {
         loading.value = true;
 
-        const res = await useClientsApi().getClients(props, filters);
+        // Se props nao for passado, cria um objeto com as propriedades padrão
+        if (!props || typeof props !== 'object' || !('page' in props)) {
+            props = {
+                page: page.value,
+                itemsPerPage: itemsPerPage.value,
+                groupBy: [],
+                sortBy: [],
+                search: '',
+            };
+        }
+
+        const res = await useClientsApi().getClients(props, activeFilters.value);
 
         if (res) {
             items.value = res.data;
@@ -24,9 +41,12 @@ export const useClientTableStore = defineStore('clientTable', () => {
     }
 
     return {
+        page,
         items,
         loading,
         totalItems,
-        fetchClients
+        fetchClients,
+        itemsPerPage,
+        activeFilters
     }
 })

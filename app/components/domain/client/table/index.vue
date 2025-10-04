@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-const store = useClientTableStore();
-const { items, totalItems, loading } = storeToRefs(store);
+defineEmits(["openFilter"]);
+
+const store = useClientStore();
+const { page, itemsPerPage, items, totalItems, loading } = storeToRefs(store);
 
 const headers = [
   { title: "Ações", key: "actions", sortable: false },
@@ -17,13 +19,45 @@ const headers = [
 
 <template>
   <UiTable
+    v-model:page="page"
+    v-model:items-per-page="itemsPerPage"
+    title="Lista de clientes"
     :items="items"
     item-value="id"
     :headers="headers"
     :loading="loading"
-    :items-length="totalItems"
+    :total-items="totalItems"
+    class="rounded-b-lg rounded-t-xl"
     @update:options="store.fetchClients"
   >
+    <template #buttons>
+      <v-btn
+        rounded="xl"
+        color="grey"
+        variant="text"
+        density="comfortable"
+        icon="mdi-filter-variant"
+        @click="$emit('openFilter')"
+      />
+
+      <v-btn
+        rounded="xl"
+        color="grey"
+        variant="text"
+        icon="mdi-refresh"
+        density="comfortable"
+        @click="store.fetchClients"
+      />
+
+      <v-btn
+        rounded="xl"
+        color="grey"
+        icon="mdi-plus"
+        variant="text"
+        density="comfortable"
+      />
+    </template>
+
     <template #item.actions>
       <v-icon icon="mdi-dots-vertical" small class="mr-2" />
     </template>

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import type { FilterDefinition, EmittedFilters } from "~/types/filter";
+import type { FilterDefinition } from "~/types/filter";
 
-const store = useClientTableStore();
+const store = useClientStore();
+const { activeFilters } = storeToRefs(store);
 
 const eventFilters = ref<FilterDefinition[]>([
   {
@@ -14,15 +15,15 @@ const eventFilters = ref<FilterDefinition[]>([
     },
   },
 ]);
-
-const activeFilters = ref<EmittedFilters>({});
 </script>
 
 <template>
-  <UiFilter
-    v-model="activeFilters"
-    :event-filters="eventFilters"
-    @clear="store.fetchClients"
-    @search="store.fetchClients(undefined, activeFilters)"
-  />
+  <v-navigation-drawer temporary location="right" width="300" class="pa-2">
+    <UiFilter
+      v-model="activeFilters"
+      :event-filters="eventFilters"
+      @clear="store.fetchClients"
+      @search="store.fetchClients"
+    />
+  </v-navigation-drawer>
 </template>

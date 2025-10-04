@@ -18,7 +18,7 @@ export type Datum = {
 
 export type Page = {
     page: number;
-    limit: number;
+    itemsPerPage: number;
     totalRows: number;
     totalPages: number;
 }
